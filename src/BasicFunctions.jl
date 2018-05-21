@@ -1,5 +1,4 @@
 
-module BasicFunctions
 
 using Erdos, ErdosExtras
 using ProgressMeter
@@ -260,4 +259,3 @@ end
 export pk
 
 
-end
