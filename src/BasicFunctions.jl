@@ -1,5 +1,5 @@
 
-module NearestNeighborsFunctions
+module BasicFunctions
 
 using Erdos, ErdosExtras
 using ProgressMeter
