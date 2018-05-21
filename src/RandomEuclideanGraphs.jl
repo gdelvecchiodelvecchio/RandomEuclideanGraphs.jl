@@ -3,7 +3,6 @@ __precompile__()
 module RandomEuclideanGraphs
 
 using Erdos, ErdosExtras
-using ProgressMeter
 
 
 include("BasicFunctions.jl")
