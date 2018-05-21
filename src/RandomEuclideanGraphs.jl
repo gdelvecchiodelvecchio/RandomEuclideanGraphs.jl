@@ -2,6 +2,9 @@ __precompile__()
 
 module RandomEuclideanGraphs
 
+using Erdos, ErdosExtras
+using ProgressMeter
+
 
 include("BasicFunctions.jl")
 #=
@@ -11,4 +14,4 @@ export nearest_neighbors_bipartite_inf, nearest_neighbors_monopartite_inf
 export randomVerteMap!, fillEdgeMap!, weight
 =#
 
-end
+end #module
