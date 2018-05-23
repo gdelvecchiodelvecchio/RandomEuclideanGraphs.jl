@@ -230,9 +230,6 @@ function pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
     prob = Array{Float64}(n)
     std1 = Array{Float64}(n)
 
-    #profiling variable
-    progr2 = Progress(nInst, 1, "Computing probabilities ")
-
 
 
 
@@ -242,7 +239,6 @@ function pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
             r = fr[:,inst] .== k
             probmat[inst,k] = mean(r)
         end
-        next!(progr2)
     end
 
     @inbounds @fastmath  for i in 1:n
