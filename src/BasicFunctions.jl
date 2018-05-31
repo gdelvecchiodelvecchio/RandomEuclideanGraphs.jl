@@ -226,16 +226,16 @@ function pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
 
 
 
-    probmat = Matrix{Float64}(nInst,n)
-    prob = Array{Float64}(n)
-    std1 = Array{Float64}(n)
+    probmat = Matrix{Float64}(nInst,n-1)
+    prob = Array{Float64}(n-1)
+    std1 = Array{Float64}(n-1)
 
 
 
 
     #probability that inside a (hyper)sphere around a black matched point there are j-th white points (no frustration correpsonds to prob[:,1])
     @inbounds for inst in 1:nInst
-        for k in 1:n
+        for k in 1:n-1
             r = fr[:,inst] .== k
             probmat[inst,k] = mean(r)
         end
