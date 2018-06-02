@@ -74,7 +74,7 @@ function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap)
     @inbounds @fastmath for point in 1:n
         distances_from_point = [euclidean_distance(vm.data[point] .- others ) for others in vm.data[match_solution[:]]]
         dist = euclidean_distance(vm.data[point] .- vm.data[match_solution[point]])
-        ris[point] = count( x -> x < dist, distances_from_point)
+        ris[point] = count( x -> x <= dist, distances_from_point)
         end
     return ris
 end
