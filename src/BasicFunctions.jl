@@ -25,7 +25,7 @@ pcostpbc(z::Float64, p::Float64) = z^p
 """
 pcostpbc(z::Float64, p::Float64) = z < 0.5 & z >= 0. ? z^p : (1-z)^p
 
-export pcost
+export pcostpbc
 
 """
 euclidean_distance(z::Array{Float64}) = norm(z, 2)
