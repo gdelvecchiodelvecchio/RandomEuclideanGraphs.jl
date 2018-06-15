@@ -53,13 +53,13 @@ matched white point this could be a measure of the frustration because the black
 point does not match the nearest white point but the k-th.
 """
 
-function nearest_neighbors_bipartite(g::AGraph, vm::VertexMap, em::EdgeMap)
+function nearest_neighbors_bipartite(g::AGraph, vm::VertexMap, em::EdgeMap, p::Float64)
     n = Int64(nv(g)/2)
     ris = Array{Int64}(n)
     match_solution = minimum_weight_perfect_matching(g, em).mate[1:n]
     @inbounds @fastmath for blackpoint in 1:n
-        distances_from_black =  [euclidean_distance(vm.data[blackpoint] .- white ) for white in vm.data[match_solution[:]]]     #verlet list
-        dist = euclidean_distance(vm.data[blackpoint] .- vm.data[match_solution[blackpoint]])
+        distances_from_black =  [euclidean_cost(pcost, vm.data[blackpoint] .- white ,p) for white in vm.data[match_solution[:]]]     #verlet list
+        dist = euclidean_cost(pcost, vm.data[blackpoint] .- vm.data[match_solution[blackpoint]], p)
         ris[blackpoint] = count( x -> x <= dist, distances_from_black)
     end
     return ris
@@ -75,13 +75,13 @@ matched white point this could be a measure of the frustration because the black
 point does not match the nearest white point but the k-th.
 """
 
-function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap)
+function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap, p::Float64)
     n = nv(g)
     ris = Array{Int64}(n)
     match_solution = minimum_weight_perfect_matching(g, em).mate
     @inbounds @fastmath for point in 1:n
-        distances_from_point = [euclidean_distance(vm.data[point] .- others ) for others in vm.data[match_solution[:]]]
-        dist = euclidean_distance(vm.data[point] .- vm.data[match_solution[point]])
+        distances_from_point = [euclidean_cost(pcost,vm.data[point] .- others ,p) for others in vm.data[match_solution[:]]]
+        dist = euclidean_cost(pcost, vm.data[point] .- vm.data[match_solution[point]], p)
         ris[point] = count( x -> x < dist, distances_from_point)
         end
     return ris
@@ -209,7 +209,7 @@ function pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
             @inbounds for i in 1:nInst
                 randomVertexMap!(vm, ρ, par...)
                 fillEdgeMap!(g, em, e->weight(e, vm, x->euclidean_cost(pcost, x, p)))
-                fr[:,i] = nearest_neighbors_bipartite(g, vm, em)
+                fr[:,i] = nearest_neighbors_bipartite(g, vm, em, p)
             end
         else
             @inbounds for i in 1:nInst
@@ -222,7 +222,7 @@ function pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
             @inbounds for i in 1:nInst
                 randomVertexMap!(vm, ρ, par...)
                 fillEdgeMap!(g, em, e->weight(e, vm, x->euclidean_cost(pcost, x, p)))
-                fr[:,i] = nearest_neighbors_monopartite(g, vm, em)
+                fr[:,i] = nearest_neighbors_monopartite(g, vm, em, p)
             end
         else
             @inbounds for i in 1:nInst
