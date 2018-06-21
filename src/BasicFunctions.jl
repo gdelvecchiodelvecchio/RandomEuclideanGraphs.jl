@@ -79,7 +79,7 @@ function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap, p:
     n = nv(g)
     ris = Array{Int64}(n)
     match_solution = minimum_weight_perfect_matching(g, em).mate
-    @inbounds for point in 1:n
+    @inbounds @fastmath for point in 1:n
         distances_from_point = [euclidean_cost(pcost,vm.data[point] .- others ,p) for others in vm.data]
         dist = euclidean_cost(pcost, vm.data[point] .- vm.data[match_solution[point]], p)
         ris[point] = count( x -> (x < dist & x > 0), distances_from_point)
@@ -242,14 +242,14 @@ function pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
 
 
     #probability that inside a (hyper)sphere around a black matched point there are j-th white points (no frustration correpsonds to prob[:,1])
-    @inbounds for inst in 1:nInst
+    @inbounds @fastmath for inst in 1:nInst
         for k in 1:n-1
             r = fr[:,inst] .== k
             probmat[inst,k] = mean(r)
         end
     end
 
-    @inbounds   for i in 1:n
+    @inbounds  @fastmath for i in 1:n
         prob[i] = mean(probmat[:,i])
         std1[i] = std(probmat[:,i])/√(nInst)
     end
