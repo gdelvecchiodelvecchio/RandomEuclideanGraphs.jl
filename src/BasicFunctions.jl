@@ -80,9 +80,9 @@ function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap, p:
     ris = Array{Int64}(n)
     match_solution = minimum_weight_perfect_matching(g, em).mate
     @inbounds @fastmath for point in 1:n
-        distances_from_point = [euclidean_cost(pcost,vm.data[point] .- others ,p) for others in vm.data[match_solution[:]]]
+        distances_from_point = [euclidean_cost(pcost,vm.data[point] .- others ,p) for others in vm.data]
         dist = euclidean_cost(pcost, vm.data[point] .- vm.data[match_solution[point]], p)
-        ris[point] = count( x -> x <= dist, distances_from_point)
+        ris[point] = count( x -> (x < dist & x > 0), distances_from_point)
         end
     return ris
 end
