@@ -58,9 +58,9 @@ function nearest_neighbors_bipartite(g::AGraph, vm::VertexMap, em::EdgeMap, p::F
     ris = Array{Int64}(n)
     match_solution = minimum_weight_perfect_matching(g, em).mate[1:n]
     @inbounds @fastmath for blackpoint in 1:n
-        distances_from_black =  [euclidean_cost(pcost, vm.data[blackpoint] .- white ,p) for white in vm.data[match_solution[:]]]     #verlet list
+        distances_from_black =  [euclidean_cost(pcost, vm.data[blackpoint] .- white ,p) for white in vm.data]     #verlet list
         dist = euclidean_cost(pcost, vm.data[blackpoint] .- vm.data[match_solution[blackpoint]], p)
-        ris[blackpoint] = count( x -> x <= dist, distances_from_black)
+        ris[blackpoint] = count( x -> (x < dist & x > 0), distances_from_black)
     end
     return ris
 end
@@ -79,7 +79,7 @@ function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap, p:
     n = nv(g)
     ris = Array{Int64}(n)
     match_solution = minimum_weight_perfect_matching(g, em).mate
-    @inbounds @fastmath for point in 1:n
+    @inbounds for point in 1:n
         distances_from_point = [euclidean_cost(pcost,vm.data[point] .- others ,p) for others in vm.data]
         dist = euclidean_cost(pcost, vm.data[point] .- vm.data[match_solution[point]], p)
         ris[point] = count( x -> (x < dist & x > 0), distances_from_point)
@@ -249,7 +249,7 @@ function pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
         end
     end
 
-    @inbounds @fastmath  for i in 1:n
+    @inbounds   for i in 1:n
         prob[i] = mean(probmat[:,i])
         std1[i] = std(probmat[:,i])/√(nInst)
     end
