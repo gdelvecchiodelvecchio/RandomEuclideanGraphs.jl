@@ -182,7 +182,7 @@ param represents an indefinite number which f accepts: f(param)
 """
 
 function pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
-    n = is_bipartite(G) | P<0. ? Int64(nv(G)/2) : nv(G)    #N for bi 2N for mono
+    n = is_bipartite(G) || P<0. ? Int64(nv(G)/2) : nv(G)    #N for bi 2N for mono
     nInst = nI      #number of instances
     d = D           #dimension
     p = P           #exponent
