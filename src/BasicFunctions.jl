@@ -76,9 +76,9 @@ point does not match the nearest white point but the k-th.
 """
 
 function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap, p::Float64)
-    n = nv(g)
+    n = Int64(nv(g)/2)
     ris = Array{Int64}(n)
-    match_solution = minimum_weight_perfect_matching(g, em).mate
+    match_solution = minimum_weight_perfect_matching(g, em).mate[1:n]
     @inbounds @fastmath for point in 1:n
         distances_from_point = [euclidean_cost(pcost,vm.data[point] .- others ,p) for others in vm.data]
         dist = euclidean_cost(pcost, vm.data[point] .- vm.data[match_solution[point]], p)
