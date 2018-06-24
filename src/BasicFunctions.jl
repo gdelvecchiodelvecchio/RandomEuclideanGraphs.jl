@@ -60,11 +60,7 @@ function nearest_neighbors_bipartite(g::AGraph, vm::VertexMap, em::EdgeMap, p::F
     @inbounds @fastmath for blackpoint in 1:n
         distances_from_black =  [euclidean_cost(pcost, vm.data[blackpoint] .- white ,p) for white in vm.data]     #verlet list
         dist = euclidean_cost(pcost, vm.data[blackpoint] .- vm.data[match_solution[blackpoint]], p)
-        if p > 0.
-           ris[blackpoint] = count( x -> (0. < x < dist) , distances_from_black)
-        else
-           ris[blackpoint] = count( x -> (0. < x > dist ) , distances_from_black)
-        end
+        ris[blackpoint] = count( x -> (0. < x < dist) , distances_from_black)
     end
     return ris
 end
@@ -86,11 +82,7 @@ function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap, p:
     @inbounds @fastmath for point in 1:n
         distances_from_point = [euclidean_cost(pcost,vm.data[point] .- others ,p) for others in vm.data]
         dist = euclidean_cost(pcost, vm.data[point] .- vm.data[match_solution[point]], p)
-        if p > 0.
-           ris[point] = count( x -> (0. < x < dist) , distances_from_point)
-        else
-           ris[point] = count( x -> (0. < x > dist) , distances_from_point)
-        end
+        ris[point] = count( x -> (0. < x < dist) , distances_from_point)
     end
     return ris
 end
