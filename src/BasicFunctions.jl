@@ -76,7 +76,7 @@ point does not match the nearest white point but the k-th.
 """
 
 function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap, p::Float64)
-    n = Int64(nv(g)/2)
+    n = Int64(nv(g))
     ris = Array{Int64}(n)
     match_solution = minimum_weight_perfect_matching(g, em).mate[1:n]
     @inbounds @fastmath for point in 1:n
@@ -182,8 +182,7 @@ param represents an indefinite number which f accepts: f(param)
 """
 
 function pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
-    #n = is_bipartite(G) || P<0. ? Int64(nv(G)/2) : nv(G)    #N for bi 2N for mono
-    n = Int64(nv(G)/2)
+    n = is_bipartite(G) ? Int64(nv(G)/2) : nv(G)    #N for bi 2N for mono
     nInst = nI      #number of instances
     d = D           #dimension
     p = P           #exponent
