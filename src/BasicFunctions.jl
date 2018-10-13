@@ -189,7 +189,7 @@ function pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
     g = G           #graph
     ρ = f           #probability density
     par = param     #parameters fo the distribution e.g Unform(0.,1.)
-
+    print(n)
     fr = Matrix{Int64}(n,nInst)
 
 
