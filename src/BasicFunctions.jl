@@ -3,36 +3,27 @@
 
 
 """
-euclidean_cost(f::Function, z::Array{Float64}, param...) = f(norm(z, 2), param...)\\
- \\
-Evaluates a scalar field at a given point z: f must be a function which takes Array{Float64} as first argument.\\
-Arbitrary number of parameters can be given.\\ cost(x .- y, 1) givse the distance between x and y.
+euclidean_cost(f::Function, z::Array{Float64}, param...) = f(norm(z, 2), param...)
+Evaluates a scalar field at a given point z: f must be a function which takes Array{Float64} as first argument.
+Arbitrary number of parameters can be given.
+cost(x .- y, 1) givse the distance between x and y.
 """
-
 euclidean_cost(f::Function, z::Array{Float64}, param...) = f(norm(z, 2), param...)
 export euclidean_cost
 """
 pcost(z::Float64, p::Float64) = z^p
-
 """
 pcost(z::Float64, p::Float64) = z^p
-
 export pcost
-
 """
 pcostpbc(z::Float64, p::Float64) = z^p
-
 """
 pcostpbc(z::Float64, p::Float64) = z < 0.5 && z >= 0. ? z^p : (1.-z)^p
-
 export pcostpbc
-
 """
 euclidean_distance(z::Array{Float64}) = norm(z, 2)
-
 """
 euclidean_distance(z::Array{Float64}) = norm(z, 2)
-
 export euclidean_distance
 
 #=
@@ -45,14 +36,13 @@ dst2(g::AGraph, v::Int, w::Int) = has_edge(g, v, w) ? w : error("e=($(v),$(w))âˆ
 
 =#
 """
-nearest_neighbors_bipartite(g::AGraph, vm::VertexMap, em::EdgeMap)\\
+nearest_neighbors_bipartite(g::AGraph, vm::VertexMap, em::EdgeMap)
 
-Return an array of nv1 elements (nv1 is the number of (say) black vertices)\\
-where in position i there is the number of white points between it and its \\
-matched white point this could be a measure of the frustration because the black\\
+Return an array of nv1 elements (nv1 is the number of (say) black vertices)
+where in position i there is the number of white points between it and its 
+matched white point this could be a measure of the frustration because the black
 point does not match the nearest white point but the k-th.
 """
-
 function nearest_neighbors_bipartite(g::AGraph, vm::VertexMap, em::EdgeMap, p::Float64)
     n = Int64(nv(g)/2)
     ris = Array{Int64}(n)
@@ -65,16 +55,14 @@ function nearest_neighbors_bipartite(g::AGraph, vm::VertexMap, em::EdgeMap, p::F
     return ris
 end
 export nearest_neighbors_bipartite
-
 """
-nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap)\\
+nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap)
 
-Return an array of nv1 elements (nv1 is the number of (say) black vertices)\\
-where in position i there is the number of white points between it and its \\
-matched white point this could be a measure of the frustration because the black\\
+Return an array of nv1 elements (nv1 is the number of (say) black vertices)
+where in position i there is the number of white points between it and its 
+matched white point this could be a measure of the frustration because the black
 point does not match the nearest white point but the k-th.
 """
-
 function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap, p::Float64)
     n = Int64(nv(g))
     ris = Array{Int64}(n)
@@ -86,15 +74,12 @@ function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap, p:
     end
     return ris
 end
-
 export nearest_neighbors_monopartite
-
 """
-nearest_neighbors_bipartite_inf(g::AGraph, vm::VertexMap, em::EdgeMap)\\\
+nearest_neighbors_bipartite_inf(g::AGraph, vm::VertexMap, em::EdgeMap)
 
 Same as without inf but here consider the mean field model.
 """
-
 function nearest_neighbors_bipartite_inf(g::AGraph, vm::VertexMap, em::EdgeMap)
     n = Int64(nv(g)/2)
     ris = Array{Int64}(n)
@@ -108,14 +93,11 @@ function nearest_neighbors_bipartite_inf(g::AGraph, vm::VertexMap, em::EdgeMap)
 end
 
 export nearest_neighbors_bipartite_inf
-
 """
-nearest_neighbors_monopartite_inf(g::AGraph, vm::VertexMap, em::EdgeMap)\\\
+nearest_neighbors_monopartite_inf(g::AGraph, vm::VertexMap, em::EdgeMap)
 
 Same as without inf but here consider the mean field model.
 """
-
-
 function nearest_neighbors_monopartite_inf(g::AGraph, vm::VertexMap, em::EdgeMap)
     n = nv(g)
     ris = Array{Int64}(n)
@@ -131,7 +113,7 @@ function nearest_neighbors_monopartite_inf(g::AGraph, vm::VertexMap, em::EdgeMap
 end
 export nearest_neighbors_monopartite_inf
 """
-wheight(e::AEdge, vm::VertexMap, f::Function)\\
+wheight(e::AEdge, vm::VertexMap, f::Function)
 
 Assosiate a weight to an edge e = (v,w) as f(v,w).
 """
@@ -140,9 +122,9 @@ function weight(e::AEdge, vm::VertexMap, f::Function)
 end
 export weight
 """
-randomVertexMap!(vm::VertexMap, f::UnionAll, param...)\\
+randomVertexMap!(vm::VertexMap, f::UnionAll, param...)
 
-Function to randomly fill an existing vertex map according to\\
+Function to randomly fill an existing vertex map according to
 a given distribution f with parameters given by param...
 """
 function randomVertexMap!(vm::VertexMap, f::UnionAll, param...)
@@ -151,7 +133,7 @@ function randomVertexMap!(vm::VertexMap, f::UnionAll, param...)
 end
 export randomVertexMap!
 """
-fillEdgeMap!(g::AGraph, em::EdgeMap, f::Function)\\
+fillEdgeMap!(g::AGraph, em::EdgeMap, f::Function)
 Function to fill an existing edge map associated with g according to f.
 """
 function fillEdgeMap!(g::AGraph, em::EdgeMap, f::Function)
@@ -166,18 +148,18 @@ export fillEdgeMap!
 #It is possible to add an argument (a path) to this function in order to produce a file
 
 """
-pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)\\
+pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
  \\
-Given graph G (bipartite or monopartite) the function \\
-computes the average probability that in the random euclidean \\
-matching (assignment) problem, in the optimal matching, a given\\
-point (black point) is linked with its k-th nearest (white) neighbor. \\
-The function returns a tuple of vectors: the probability and its standard\\
-error computed over the nI instances. The parameters are the following:\\
-G is the graph\\
-D is the dimension of the euclidean space\\
-P is the exponent of the cost function z^P\\
-f is the distribution used to generate points\\
+Given graph G (bipartite or monopartite) the function 
+computes the average probability that in the random euclidean 
+matching (assignment) problem, in the optimal matching, a given
+point (black point) is linked with its k-th nearest (white) neighbor. 
+The function returns a tuple of vectors: the probability and its standard
+error computed over the nI instances. The parameters are the following:
+G is the graph
+D is the dimension of the euclidean space
+P is the exponent of the cost function z^P
+f is the distribution used to generate points
 param represents an indefinite number which f accepts: f(param)
 """
 
