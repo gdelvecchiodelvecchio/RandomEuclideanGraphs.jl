@@ -39,16 +39,6 @@ euclidean_distance(z::Array{Float64}) = norm(z, 2)
 """
 euclidean_distance(z::Array{Float64}) = norm(z, 2)
 export euclidean_distance
-
-#=
-#enhanced src and dst to access edges
-
-src2(g::AGraph, e::AEdge) = has_edge(g, e) ? src(e) : error("e=($(e.src),$(e.dst))∉g")
-dst2(g::AGraph, e::AEdge) = has_edge(g, e) ? dst(e) : error("e=($(e.src),$(e.dst))∉g")
-src2(g::AGraph, v::Int, w::Int) = has_edge(g, v, w) ? v : error("e=($(v),$(w))∉g")
-dst2(g::AGraph, v::Int, w::Int) = has_edge(g, v, w) ? w : error("e=($(v),$(w))∉g")
-
-=#
 """
 wheight(e::AEdge, vm::VertexMap, f::Function)
 
@@ -78,4 +68,14 @@ function fillEdgeMap!(g::AGraph, em::EdgeMap, f::Function)
 end
 
 export fillEdgeMap!
+
+#=
+#enhanced src and dst to access edges
+
+src2(g::AGraph, e::AEdge) = has_edge(g, e) ? src(e) : error("e=($(e.src),$(e.dst))∉g")
+dst2(g::AGraph, e::AEdge) = has_edge(g, e) ? dst(e) : error("e=($(e.src),$(e.dst))∉g")
+src2(g::AGraph, v::Int, w::Int) = has_edge(g, v, w) ? v : error("e=($(v),$(w))∉g")
+dst2(g::AGraph, v::Int, w::Int) = has_edge(g, v, w) ? w : error("e=($(v),$(w))∉g")
+
+=#
 
