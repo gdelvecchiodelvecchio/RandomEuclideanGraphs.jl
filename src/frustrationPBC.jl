@@ -38,7 +38,6 @@ function nearest_neighbors_monopartite_pbc(g::AGraph, vm::VertexMap, em::EdgeMap
     return ris
 end
 export nearest_neighbors_monopartite_pbc
-
 """
 pk_pbc(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
 
