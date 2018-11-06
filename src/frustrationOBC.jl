@@ -1,4 +1,3 @@
-
 """
 nearest_neighbors_bipartite(g::AGraph, vm::VertexMap, em::EdgeMap)
 
@@ -81,7 +80,6 @@ export nearest_neighbors_monopartite_inf
 #a single core with a low number of instances. It is also possible to test the monopartite and the bipartite
 #case at the same time.
 #It is possible to add an argument (a path) to this function in order to produce a file
-
 """
 pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
 
