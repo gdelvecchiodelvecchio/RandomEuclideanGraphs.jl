@@ -2,10 +2,12 @@ __precompile__()
 
 module RandomEuclideanGraphs
 
-using Erdos, ErdosExtras
+using Erdos, ErdosExtras, Distributions
 
 
 include("BasicFunctions.jl")
+include("frustrationOBC.jl")
+include("frustrationPBC.jl")
 #=
 export pk, euclidean_cost, euclidean_distance
 export pcost, nearest_neighbors_bipartite, nearest_neighbors_monopartite
