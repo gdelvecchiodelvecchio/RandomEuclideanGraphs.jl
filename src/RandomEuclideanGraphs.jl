@@ -2,7 +2,7 @@ __precompile__()
 
 module RandomEuclideanGraphs
 
-using Erdos, ErdosExtras, Distributions
+using Erdos, ErdosExtras, Distributions, LinearAlgebra
 
 
 include("BasicFunctions.jl")
