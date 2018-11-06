@@ -1,8 +1,8 @@
-julia v0.6
+julia v0.6+
 
 Erdos
 
 ErdosExtras
 
+Distributions
 
-NearestNeighbors
