@@ -149,7 +149,7 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
 
     probmat = Matrix{Float64}(nInst,n)
     prob = Array{Float64}(n)
-    errors = Array{Float64}(nInst, n)
+    errors = Array{Float64}(n)
 
 
 
