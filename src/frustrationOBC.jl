@@ -165,7 +165,7 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
 
     @inbounds  @fastmath for i in 1:n
         prob[i] = mean(probmat[:,i])
-        errors2[i] = mean(errors1[:,i])
+        errors2[i] = maximum(errors1[:,i])
     end
 
     return prob, errors2
