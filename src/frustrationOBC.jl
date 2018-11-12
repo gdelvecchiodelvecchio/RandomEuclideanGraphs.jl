@@ -9,7 +9,7 @@ point does not match the nearest white point but the k-th.
 function nearest_neighbors_bipartite(g::AGraph, vm::VertexMap, em::EdgeMap, p::Float64)
     n = Int64(nv(g)/2)
     ris = Array{Int64}(n)
-    match_solution = minimum_weight_perfect_matching(g, em).mate[1:n]
+    match_solution = minimum_weight_perfect_matching(g, em).mate
     @inbounds @fastmath for blackpoint in 1:n
         distances_from_black =  [euclidean_cost(pcost, vm.data[blackpoint] .- white ,p) for white in vm.data]     #verlet list
         dist = euclidean_cost(pcost, vm.data[blackpoint] .- vm.data[match_solution[blackpoint]], p)
@@ -29,7 +29,7 @@ point does not match the nearest white point but the k-th.
 function nearest_neighbors_monopartite(g::AGraph, vm::VertexMap, em::EdgeMap, p::Float64)
     n = Int64(nv(g))
     ris = Array{Int64}(n)
-    match_solution = minimum_weight_perfect_matching(g, em).mate[1:n]
+    match_solution = minimum_weight_perfect_matching(g, em).mate
     @inbounds @fastmath for point in 1:n
         distances_from_point = [euclidean_cost(pcost,vm.data[point] .- others ,p) for others in vm.data]
         dist = euclidean_cost(pcost, vm.data[point] .- vm.data[match_solution[point]], p)
@@ -149,8 +149,8 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
 
     probmat = Matrix{Float64}(nInst,n)
     prob = Array{Float64}(n)
-    std1 = Array{Float64}(n)
-
+    errors2 = Array{Float64}(n)
+    errors1 = Array{Float64}(nInst, n)
 
 
 
@@ -159,15 +159,16 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
         for k in 1:n
             r = fr[:,inst] .== k
             probmat[inst,k] = mean(r)
+            errors1[inst, k] = std(r) / n
         end
     end
 
     @inbounds  @fastmath for i in 1:n
         prob[i] = mean(probmat[:,i])
-        std1[i] = sum((probmat[:,i] .- prob[i]) .^2) / sqrt(nInst * (nInst - 1))
+        errors2[i] = mean(errors1[:,i])
     end
 
-    return prob, std1
+    return prob, errors2
 end
 
 export pk
