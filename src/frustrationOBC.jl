@@ -149,8 +149,7 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
 
     probmat = Matrix{Float64}(nInst,n)
     prob = Array{Float64}(n)
-    errors2 = Array{Float64}(n)
-    errors1 = Array{Float64}(nInst, n)
+    errors = Array{Float64}(nInst, n)
 
 
 
@@ -159,16 +158,15 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
         for k in 1:n
             r = fr[:,inst] .== k
             probmat[inst,k] = mean(r)
-            errors1[inst, k] = std(r) / n
         end
     end
 
     @inbounds  @fastmath for i in 1:n
         prob[i] = mean(probmat[:,i])
-        errors2[i] = maximum(errors1[:,i])
+        errors[i] = std(probmat[:, i]) / sqrt(nInst)
     end
 
-    return prob, errors2
+    return prob, errors
 end
 
 export pk
