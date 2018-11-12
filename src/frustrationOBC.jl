@@ -164,7 +164,7 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
 
     @inbounds  @fastmath for i in 1:n
         prob[i] = mean(probmat[:,i])
-        std1[i] = std(probmat[:,i]) / nInst
+        std1[i] = std(probmat[:,i]) / sqrt(nInst)
     end
 
     return prob, std1
