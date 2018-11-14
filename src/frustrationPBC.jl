@@ -9,7 +9,7 @@ point does not match the nearest white point but the k-th. Use periodic boundary
 function nearest_neighbors_bipartite_pbc(g::AGraph, vm::VertexMap, em::EdgeMap, p::Float64)
     n = Int64(nv(g)/2)
     ris = Array{Int64}(n)
-    match_solution = minimum_weight_perfect_matching(g, em).mate[1:n]
+    match_solution = minimum_weight_perfect_matching(g, em).mate
     @inbounds @fastmath for blackpoint in 1:n
         distances_from_black =  [circle_cost(pcost, vm.data[blackpoint] .- white ,p) for white in vm.data]     #verlet list
         dist = circle_cost(pcost, vm.data[blackpoint] .- vm.data[match_solution[blackpoint]], p)
@@ -29,7 +29,7 @@ point does not match the nearest white point but the k-th. Use periodic boundary
 function nearest_neighbors_monopartite_pbc(g::AGraph, vm::VertexMap, em::EdgeMap, p::Float64)
     n = Int64(nv(g))
     ris = Array{Int64}(n)
-    match_solution = minimum_weight_perfect_matching(g, em).mate[1:n]
+    match_solution = minimum_weight_perfect_matching(g, em).mate
     @inbounds @fastmath for point in 1:n
         distances_from_point = [circle_cost(pcost,vm.data[point] .- others ,p) for others in vm.data]
         dist = circle_cost(pcost, vm.data[point] .- vm.data[match_solution[point]], p)
