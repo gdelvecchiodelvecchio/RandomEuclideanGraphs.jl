@@ -166,7 +166,7 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
         errors[i] = std(probmat[:, i]) / sqrt(nInst)
     end
 
-    return prob, errors
+    return fr, prob, errors
 end
 
 export pk
