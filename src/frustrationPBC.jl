@@ -126,7 +126,7 @@ function pk_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param..
         std1[i] = std(probmat[:,i]) / sqrt(nInst)
     end
 
-    return prob, std1
+    return fr, prob, std1
 end
 
 export pk_pbc
