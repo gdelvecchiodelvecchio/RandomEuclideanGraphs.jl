@@ -39,22 +39,10 @@ function nearest_neighbors_monopartite_pbc(g::AGraph, vm::VertexMap, em::EdgeMap
 end
 export nearest_neighbors_monopartite_pbc
 """
-pk_pbc(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
 
-Given graph G (bipartite or monopartite) the function
-computes the average probability that in the random euclidean
-matching (assignment) problem, in the optimal matching, a given
-point (black point) is linked with its k-th nearest (white) neighbor.
-The function returns a tuple of vectors: the probability and its standard
-error computed over the nI instances. The parameters are the following:
-G is the graph
-D is the dimension of the euclidean space
-P is the exponent of the cost function z^P
-f is the distribution used to generate points
-param represents an indefinite number which f accepts: f(param)
- Use periodic boundary conditions.
 """
-function pk_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
+function nearest_neighbors_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
+    
     n = is_bipartite(G) ? Int64(nv(G)/2) : nv(G)    #N for bi 2N for mono
     nInst = nI      #number of instances
     d = D           #dimension
@@ -103,7 +91,45 @@ function pk_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param..
             end
         end
     end
+    
+    return fr
+    
+end
+export nearest_neighbors_pbc
+"""
+pk_pbc(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
 
+Given graph G (bipartite or monopartite) the function
+computes the average probability that in the random euclidean
+matching (assignment) problem, in the optimal matching, a given
+point (black point) is linked with its k-th nearest (white) neighbor.
+The function returns a tuple of vectors: the probability and its standard
+error computed over the nI instances. The parameters are the following:
+G is the graph
+D is the dimension of the euclidean space
+P is the exponent of the cost function z^P
+f is the distribution used to generate points
+param represents an indefinite number which f accepts: f(param)
+ Use periodic boundary conditions.
+"""
+function pk_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
+    n = is_bipartite(G) ? Int64(nv(G)/2) : nv(G)    #N for bi 2N for mono
+    nInst = nI      #number of instances
+    d = D           #dimension
+    p = P           #exponent
+    g = G           #graph
+    ρ = f           #probability density
+    par = param     #parameters fo the distribution e.g Unform(0.,1.)
+    fr = Matrix{Int64}(n,nInst)
+
+
+
+    #to speedup the computation it is better to iterate over the rows
+    #(Julia native's Array type is the column vector)
+
+    #initialization of graph variables for the computation
+
+    fr = nearest_neighbors_pbc(g, d, nInst, p, ρ, par...)
 
 
     probmat = Matrix{Float64}(nInst,n)
@@ -126,7 +152,7 @@ function pk_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param..
         std1[i] = std(probmat[:,i]) / sqrt(nInst)
     end
 
-    return fr, prob, std1
+    return prob, std1
 end
 
 export pk_pbc
