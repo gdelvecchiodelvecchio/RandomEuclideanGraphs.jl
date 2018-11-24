@@ -97,8 +97,34 @@ function nearest_neighbors_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::Un
 end
 export nearest_neighbors_pbc
 """
-pk_pbc(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
+pik_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
+Returns hte matrix prob_ki which gives the (averaged over the disorder) probability that the point i is matched to its k-the nearest
+neighbors (in terms of cost).
+"""
+function pik_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
+    n = is_bipartite(G) ? Int64(nv(G)/2) : nv(G)    #N for bi 2N for mono
+    nInst = nI      #number of instances
+    d = D           #dimension
+    p = P           #exponent
+    g = G           #graph
+    ρ = f           #probability density
+    par = param     #parameters fo the distribution e.g Unform(0.,1.)
+    
+    fr = nearest_neighbors_pbc(G, D, nI, P, f, param...)
+    
+    prob = Array{Float64}(n, n)
+    
+    for k in 1:n
+        for i in 1:n
+            prob[k, i] = mean(fr[i,:] .== k)
+        end
+    end
 
+    return prob
+end
+export pik_pbc
+"""
+pk_pbc(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
 Given graph G (bipartite or monopartite) the function
 computes the average probability that in the random euclidean
 matching (assignment) problem, in the optimal matching, a given
@@ -110,7 +136,6 @@ D is the dimension of the euclidean space
 P is the exponent of the cost function z^P
 f is the distribution used to generate points
 param represents an indefinite number which f accepts: f(param)
- Use periodic boundary conditions.
 """
 function pk_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
     n = is_bipartite(G) ? Int64(nv(G)/2) : nv(G)    #N for bi 2N for mono
@@ -129,30 +154,11 @@ function pk_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param..
 
     #initialization of graph variables for the computation
 
-    fr = nearest_neighbors_pbc(g, d, nInst, p, ρ, par...)
+    prob = pik_pbc(g, d, nInst, p, ρ, par...)
 
+    p = [mean(prob[i,:]) for i in 1:n]
+    s = [std(prob[i,:]) / sqrt(nInst) for i in 1:n]
 
-    probmat = Matrix{Float64}(nInst,n)
-    prob = Array{Float64}(n)
-    std1 = Array{Float64}(n)
-
-
-
-
-    #probability that inside a (hyper)sphere around a black matched point there are j-th white points (no frustration correpsonds to prob[:,1])
-    @inbounds @fastmath for inst in 1:nInst
-        for k in 1:n
-            r = fr[:,inst] .== k
-            probmat[inst,k] = mean(r)
-        end
-    end
-
-    @inbounds  @fastmath for i in 1:n
-        prob[i] = mean(probmat[:,i])
-        std1[i] = std(probmat[:,i]) / sqrt(nInst)
-    end
-
-    return prob, std1
+    return p, s
 end
-
 export pk_pbc
