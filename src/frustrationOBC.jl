@@ -184,7 +184,7 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
     g = G           #graph
     ρ = f           #probability density
     par = param     #parameters fo the distribution e.g Unform(0.,1.)
-    fr = Matrix{Int64}(n,nInst)
+    fr = nearest_neighbors(G, D, nInst, P, f, param...)
     prob = Array{Float64}(n, nInst)
     #average over i
     for inst in 1:nInst
