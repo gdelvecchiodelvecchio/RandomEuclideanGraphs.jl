@@ -150,7 +150,7 @@ function pk_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param..
     #average over i
     for inst in 1:nInst
         for k in 1:n
-            prob[k, :] = mean(fr[:,nInst] .== k)
+            prob[k, inst] = mean(fr[:,nInst] .== k)
         end
     end
 
