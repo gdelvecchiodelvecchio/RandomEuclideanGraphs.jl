@@ -133,7 +133,34 @@ function nearest_neighbors(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionA
 end #end function
 
 export nearest_neighbors
+"""
+pik(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
 
+Returns hte matrix prob_ki which gives the (averaged over the disorder) probability that the point i is matched to its k-the nearest
+neighbors (in terms of cost).
+"""
+function pik(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
+    n = is_bipartite(G) ? Int64(nv(G)/2) : nv(G)    #N for bi 2N for mono
+    nInst = nI      #number of instances
+    d = D           #dimension
+    p = P           #exponent
+    g = G           #graph
+    ρ = f           #probability density
+    par = param     #parameters fo the distribution e.g Unform(0.,1.)
+    
+    fr = nearest_neighbors(G, D, nI, P, f, param...)
+    
+    prob = Array{Float64}(n, n)
+    
+    for k in 1:n
+        for i in 1:n
+            prob[k, i] = mean(a[i,:] .== k)
+        end
+    end
+
+    return prob
+end
+export pik
 """
 pk(G::AGraph, D::Real, nI::Int64, P::Float64, f::UnionAll, param...)
 
@@ -166,28 +193,11 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
 
     #initialization of graph variables for the computation
 
-    fr = nearest_neighbors(g, d, nInst, p, ρ, par...)
+    prob = pik(g, d, nInst, p, ρ, par...)
 
-    probmat = Matrix{Float64}(nInst,n)
-    prob = Array{Float64}(n)
-    errors = Array{Float64}(n)
+    p = [mean(prob[i,:]) for i in 1:n]
+    s = [std(prob[i,:]) / sqrt(nInst) for i in 1:n]
 
-
-
-    #probability that inside a (hyper)sphere around a black matched point there are j-th white points (no frustration correpsonds to prob[:,1])
-    @inbounds @fastmath for inst in 1:nInst
-        for k in 1:n
-            r = fr[:,inst] .== k
-            probmat[inst,k] = mean(r)
-        end
-    end
-
-    @inbounds  @fastmath for i in 1:n
-        prob[i] = mean(probmat[:,i])
-        errors[i] = std(probmat[:, i]) / sqrt(nInst)
-    end
-
-    return prob, errors
+    return p, s
 end
-
 export pk
