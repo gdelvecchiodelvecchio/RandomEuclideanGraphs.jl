@@ -154,7 +154,7 @@ function pik(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
     
     for k in 1:n
         for i in 1:n
-            prob[k, i] = mean(a[i,:] .== k)
+            prob[k, i] = mean(fr[i,:] .== k)
         end
     end
 
