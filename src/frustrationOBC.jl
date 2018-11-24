@@ -166,7 +166,7 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
 
     #initialization of graph variables for the computation
 
-    fr = nearest_nerighbors(g, d, nInst, p, ρ, par...)
+    fr = nearest_neighbors(g, d, nInst, p, ρ, par...)
 
     probmat = Matrix{Float64}(nInst,n)
     prob = Array{Float64}(n)
