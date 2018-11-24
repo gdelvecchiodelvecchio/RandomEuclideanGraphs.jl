@@ -90,6 +90,8 @@ function nearest_neighbors(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionA
  d = D
  nInst = nI
  p = P
+ ρ = f          
+ par = param 
  n = is_bipartite(G) ? Int64(nv(G)/2) : nv(G)    #N for bi 2N for mon
  fr = Matrix{Int64}(n,nInst)
  
