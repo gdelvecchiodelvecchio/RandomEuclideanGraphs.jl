@@ -145,19 +145,18 @@ function pk_pbc(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param..
     g = G           #graph
     ρ = f           #probability density
     par = param     #parameters fo the distribution e.g Unform(0.,1.)
-    fr = Matrix{Int64}(n,nInst)
+    fr = nearest_neighbors_pbc(g, d, nInst, p, ρ, par...)
+    prob = Array{Float64}(n, nInst)
+    #average over i
+    for inst in 1:nInst
+        for k in 1:n
+            prob[k, :] = mean(fr[:,nInst] .== k)
+        end
+    end
 
-
-
-    #to speedup the computation it is better to iterate over the rows
-    #(Julia native's Array type is the column vector)
-
-    #initialization of graph variables for the computation
-
-    prob = pik_pbc(g, d, nInst, p, ρ, par...)
-
-    p = [mean(prob[i,:]) for i in 1:n]
-    s = [std(prob[i,:]) / sqrt(nInst) for i in 1:n]
+    #average over instances
+    p = [mean(prob[k,:]) for k in 1:n]
+    s = [std(prob[k,:]) / sqrt(nInst) for k in 1:n]
 
     return p, s
 end
