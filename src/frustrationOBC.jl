@@ -166,40 +166,7 @@ function pk(G::AGraph, D::Int64, nI::Int64, P::Float64, f::UnionAll, param...)
 
     #initialization of graph variables for the computation
 
-    vm = d < Inf ? VertexMap(g, x->rand(d)) : VertexMap(g,x->rand())
-    em = EdgeMap(g, e->rand())
-    #possibility to test infinte dimension
-
-
-    if is_bipartite(g)
-        if d < Inf
-            @inbounds for i in 1:nInst
-                randomVertexMap!(vm, ρ, par...)
-                fillEdgeMap!(g, em, e->weight(e, vm, x->euclidean_cost(pcost, x, p)))
-                fr[:,i] = nearest_neighbors_bipartite(g, vm, em, p)
-            end
-        else
-            @inbounds for i in 1:nInst
-                fillEdgeMap!(g, em, e->rand())
-                fr[:,i] = nearest_neighbors_bipartite_inf(g, vm, em)
-            end
-        end
-    else
-        if d < Inf
-            @inbounds for i in 1:nInst
-                randomVertexMap!(vm, ρ, par...)
-                fillEdgeMap!(g, em, e->weight(e, vm, x->euclidean_cost(pcost, x, p)))
-                fr[:,i] = nearest_neighbors_monopartite(g, vm, em, p)
-            end
-        else
-            @inbounds for i in 1:nInst
-                fillEdgeMap!(g, em, e->rand())
-                fr[:,i] = nearest_neighbors_monopartite_inf(g, vm, em)
-            end
-        end
-    end
-
-
+    fr = nearest_nerighbors(g, d, nInst, p, ρ, par...)
 
     probmat = Matrix{Float64}(nInst,n)
     prob = Array{Float64}(n)
